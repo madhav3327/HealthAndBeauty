@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BeautyCare AI</title>
+    <style>
+        body { 
+            font-family: Arial;
+            background: #f0f8ff; 
+            padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+        h2 { text-align: center; color: #ff69b4; }
+        textarea, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; }
+        #output { margin-top: 20px; background: #fafafa; padding: 15px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🧴 BeautyCare AI</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="issue_type">Select Category:</label>
+        <select name="issue_type" required>
+            <option value="skin">Skin</option>
+            <option value="hair">Hair</option>
+            <option value="body">Body</option>
+        </select>
+
+        <label for="user_input">Describe your issue:</label>
+        <textarea name="user_input" rows="3" placeholder="e.g. I have acne or dry skin..." required></textarea>
+
+        <button type="submit">Ask AI</button>
+    </form>
+
+    {% if questions %}
+    <div id="output">
+        <h4>🧠 Follow-up Questions:</h4>
+        <p>{{ questions }}</p>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

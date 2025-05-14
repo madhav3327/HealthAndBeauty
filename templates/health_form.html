@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health Care Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #c1dfc4, #deecdd);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 70px;
+      padding-bottom: 60px;
+    }
+    .form-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .section-title {
+      text-align: center;
+      color: #198754;
+      margin-bottom: 10px;
+    }
+    header, footer {
+      background-color: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: fixed;
+      z-index: 1000;
+    }
+    header {
+      top: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    footer {
+      bottom: 0;
+      text-align: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h4 class="text-success m-0">BeautyCare AI</h4>
+    <a href="#">About Us</a>
+  </header>
+
+  <h2 class="section-title">Health & Wellness</h2>
+  {% if error %}
+  <div class="alert alert-danger text-center">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/results/" class="form-box">
+    {% csrf_token %}
+    <input type="hidden" name="issue" value="{{ issue }}">
+
+    <div class="mb-3">
+      <label class="form-label">1. How many hours of sleep do you get on average?</label>
+      <input type="number" class="form-control" name="sleep_hours" min="0" max="24" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">2. How would you rate your energy levels daily?</label>
+      <select class="form-select" name="energy_level" required>
+        <option value="">Select</option>
+        <option value="Low">Low</option>
+        <option value="Moderate">Moderate</option>
+        <option value="High">High</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">3. How balanced is your diet?</label>
+      <select class="form-select" name="diet_quality" required>
+        <option value="">Select</option>
+        <option value="Unhealthy">Unhealthy</option>
+        <option value="Somewhat Healthy">Somewhat Healthy</option>
+        <option value="Very Healthy">Very Healthy</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">4. How often do you exercise?</label>
+      <select class="form-select" name="exercise_freq" required>
+        <option value="">Select</option>
+        <option value="Rarely">Rarely</option>
+        <option value="1–2 times a week">1–2 times a week</option>
+        <option value="3–5 times a week">3–5 times a week</option>
+        <option value="Daily">Daily</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">5. Current stress levels?</label><br>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="stress_level" value="Low" required>
+        <label class="form-check-label">Low</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="stress_level" value="Moderate">
+        <label class="form-check-label">Moderate</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="stress_level" value="High">
+        <label class="form-check-label">High</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">6. Any specific health issues you'd like to mention?</label>
+      <textarea class="form-control" name="health_concerns" rows="3" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Get My Wellness Tips</button>
+  </form>
+
+  <footer>
+    <p>The information provided is from AI. Please cross-check independently. This is for informational purposes only.</p>
+  </footer>
+</body>
+</html>

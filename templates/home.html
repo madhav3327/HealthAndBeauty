@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BeautyCare AI - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #ffe4e1, #f0c4ff);
+      min-height: 100vh;
+    }
+    header, footer {
+      background-color: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    h1 { margin: 0; color: #cc3399; }
+    .content {
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    select, input[type="text"] {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .dropdown, .issue-form { margin-top: 20px; display: none; }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      display: none;
+    }
+    .floating-card {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .floating-card button {
+      background-color: #cc3399;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 15px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 12px;
+      background: #f9f9f9;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .tips-section {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .tip-card {
+      width: 200px;
+      height: 200px;
+      perspective: 1000px;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+    .tip-card:hover .card-inner {
+      transform: scale(1.05);
+    }
+    .tip-card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      text-align: center;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    .btn-more {
+      margin-top: 10px;
+      background-color: #cc3399;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>BeautyCare AI</h1>
+    <a href="#">About Us</a>
+  </header>
+
+  <div class="content">
+    <h2>Please select the category in which you have an issue</h2>
+    <select id="category" onchange="showForm()">
+      <option value="">-- Select Category --</option>
+      <option value="skin">Skin</option>
+      <option value="hair">Hair</option>
+      <option value="body">Body</option>
+      <option value="health">Health</option>
+    </select>
+
+    <div class="issue-form" id="issueForm">
+      <form id="issueInputForm">
+        {% csrf_token %}
+        <label for="issue">Describe your issue:</label>
+        <input type="text" name="issue" id="issue" required>
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+      </form>
+    </div>
+
+    <div class="tips-section">
+      <div class="tip-card" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-front">
+            <h4>Face Tips</h4>
+            <p>Wash your face twice daily.</p>
+            <button class="btn-more">More</button>
+          </div>
+          <div class="card-back">
+            <p>Use non-comedogenic products, avoid touching your face often.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tip-card" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-front">
+            <h4>Skin Tips</h4>
+            <p>Apply SPF daily.</p>
+            <button class="btn-more">More</button>
+          </div>
+          <div class="card-back">
+            <p>Moisturize regularly, avoid harsh chemicals.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tip-card" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-front">
+            <h4>Body Tips</h4>
+            <p>Stay hydrated, exfoliate.</p>
+            <button class="btn-more">More</button>
+          </div>
+          <div class="card-back">
+            <p>Use gentle scrubs and moisturize after shower.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tip-card" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-front">
+            <h4>Health Tips</h4>
+            <p>Sleep well, eat balanced diet.</p>
+            <button class="btn-more">More</button>
+          </div>
+          <div class="card-back">
+            <p>Exercise daily, reduce stress, drink enough water.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="floating-card">
+      <p>Please provide more information on next page to help you better.</p>
+      <button onclick="redirectToCategory()">OK</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>The information provided is from AI. Please cross-check independently. This is for informational purposes only.</p>
+  </footer>
+
+  <script>
+    function showForm() {
+      const category = document.getElementById('category').value;
+      document.getElementById('issueForm').style.display = category ? 'block' : 'none';
+    }
+
+    document.getElementById("issueInputForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      setTimeout(() => {
+        document.getElementById('overlay').style.display = 'flex';
+      }, 0);
+    });
+
+    function redirectToCategory() {
+      const category = document.getElementById('category').value;
+      if (category) {
+        window.location.href = '/' + category + '/';
+      }
+    }
+
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+    }
+  </script>
+</body>
+</html>

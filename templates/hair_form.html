@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hair Care Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      padding: 30px;
+      font-family: Arial, sans-serif;
+    }
+    .form-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .section-title {
+      text-align: center;
+      color: #6f42c1;
+      margin-bottom: 10px;
+    }
+    header, footer {
+      background-color: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h4 class="text-primary m-0">BeautyCare AI</h4>
+    <a href="#">About Us</a>
+  </header>
+
+  <h2 class="section-title">Hair Care</h2>
+  {% if error %}
+  <div class="alert alert-danger text-center">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/results/" class="form-box">
+    {% csrf_token %}
+    <input type="hidden" name="issue" value="{{ issue }}">
+
+    <div class="mb-3">
+      <label class="form-label">1. Hair Type:</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="hair_type" value="Dry" required>
+        <label class="form-check-label">Dry</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="hair_type" value="Oily">
+        <label class="form-check-label">Oily</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="hair_type" value="Normal">
+        <label class="form-check-label">Normal</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">2. How many times do you shampoo per week?</label>
+      <input type="number" class="form-control" name="shampoo_count" min="0" max="7" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">3. Shampoo Brand:</label>
+      <input type="text" class="form-control" name="shampoo_brand" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">4. Do you use conditioner?</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="conditioner_used" value="Yes" onclick="toggleInput('conditioner_brand', true)" required>
+        <label class="form-check-label">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="conditioner_used" value="No" onclick="toggleInput('conditioner_brand', false)">
+        <label class="form-check-label">No</label>
+      </div>
+      <div id="conditioner_brand_wrapper" class="mt-2">
+        <input type="text" id="conditioner_brand" name="conditioner_brand" class="form-control" placeholder="Brand Name" style="display: none;">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">5. Scalp Condition: Do you have dandruff?</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="dandruff" value="Yes" required>
+        <label class="form-check-label">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="dandruff" value="No">
+        <label class="form-check-label">No</label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Get My Hair Care Suggestions</button>
+  </form>
+
+  <footer>
+    <p>The information provided is from AI. Please cross-check independently. This is for informational purposes only.</p>
+  </footer>
+
+  <script>
+    function toggleInput(id, show) {
+      const input = document.getElementById(id);
+      const wrapper = document.getElementById(`${id}_wrapper`);
+      if (input) input.style.display = show ? 'block' : 'none';
+      if (wrapper) wrapper.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

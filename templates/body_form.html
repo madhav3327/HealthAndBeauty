@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Body Care Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #fad0c4, #ffd1ff);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 70px;
+      padding-bottom: 60px;
+    }
+    .form-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .section-title {
+      text-align: center;
+      color: #d63384;
+      margin-bottom: 10px;
+    }
+    header, footer {
+      background-color: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: fixed;
+      z-index: 1000;
+    }
+    header {
+      top: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    footer {
+      bottom: 0;
+      text-align: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h4 class="text-danger m-0">BeautyCare AI</h4>
+    <a href="#">About Us</a>
+  </header>
+
+  <h2 class="section-title">Body Care</h2>
+  {% if error %}
+  <div class="alert alert-danger text-center">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/results/" class="form-box">
+    {% csrf_token %}
+    <input type="hidden" name="issue" value="{{ issue }}">
+
+    <div class="mb-3">
+      <label class="form-label">1. Body Skin Dryness Level (0–100):</label>
+      <input type="range" class="form-range" name="dryness_level" min="0" max="100" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">2. Do you use body lotion/moisturizer?</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="moisturizer_used" value="Yes" onclick="toggleInput('moisturizer_brand', true)" required>
+        <label class="form-check-label">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="moisturizer_used" value="No" onclick="toggleInput('moisturizer_brand', false)">
+        <label class="form-check-label">No</label>
+      </div>
+      <div id="moisturizer_brand_wrapper" class="mt-2">
+        <input type="text" id="moisturizer_brand" name="moisturizer_brand" class="form-control" placeholder="Brand Name" style="display: none;">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">3. How often do you exfoliate (scrub)?</label><br>
+      <select class="form-select" name="exfoliation_freq" required>
+        <option value="">Select</option>
+        <option value="Never">Never</option>
+        <option value="Occasionally">Occasionally</option>
+        <option value="Weekly">Weekly</option>
+        <option value="Daily">Daily</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">4. Sun exposure daily?</label><br>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="sun_exposure" value="Low" required>
+        <label class="form-check-label">Low</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="sun_exposure" value="Moderate">
+        <label class="form-check-label">Moderate</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="sun_exposure" value="High">
+        <label class="form-check-label">High</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">5. Specific skin concerns on body:</label>
+      <textarea class="form-control" name="body_concerns" rows="3" required></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">6. What kind of clothes do you mostly wear?</label><br>
+      <select class="form-select" name="clothing_type" required>
+        <option value="">Select</option>
+        <option value="Cotton">Cotton</option>
+        <option value="Synthetic">Synthetic</option>
+        <option value="Mixed">Mixed</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">7. Any known allergies or past skin reactions?</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="allergies" value="Yes" onclick="toggleInput('allergy_detail', true)" required>
+        <label class="form-check-label">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="allergies" value="No" onclick="toggleInput('allergy_detail', false)">
+        <label class="form-check-label">No</label>
+      </div>
+      <div id="allergy_detail_wrapper" class="mt-2">
+        <input type="text" id="allergy_detail" name="allergy_detail" class="form-control" placeholder="Brief description" style="display: none;">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Get My Body Care Suggestions</button>
+  </form>
+
+  <footer>
+    <p>The information provided is from AI. Please cross-check independently. This is for informational purposes only.</p>
+  </footer>
+
+  <script>
+    function toggleInput(id, show) {
+      const input = document.getElementById(id);
+      const wrapper = document.getElementById(`${id}_wrapper`);
+      if (input) input.style.display = show ? 'block' : 'none';
+      if (wrapper) wrapper.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

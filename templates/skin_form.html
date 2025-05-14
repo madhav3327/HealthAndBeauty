@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skin Care Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #ffe4e1, #f0c4ff);
+      padding: 30px;
+      font-family: Arial, sans-serif;
+    }
+    .form-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .section-title {
+      text-align: center;
+      color: #cc3399;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2 class="section-title">Skin Care</h2>
+  {% if error %}
+  <div class="alert alert-danger text-center">{{ error }}</div>
+{% endif %}
+ 
+  <form method="post" action="/results/" class="form-box">
+    {% csrf_token %}
+    <input type="hidden" name="issue" value="{{ issue }}">
+
+    <div class="mb-3">
+      <label class="form-label">1. Skin Type:</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="skin_type" value="Oily" onclick="showPercentage()" required>
+        <label class="form-check-label">Oily</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="skin_type" value="Dry" onclick="showPercentage()">
+        <label class="form-check-label">Dry</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="skin_type" value="Normal" onclick="hidePercentage()">
+        <label class="form-check-label">Normal</label>
+      </div>
+      <div class="mt-2" id="percentageBox" style="display:none;">
+        <label class="form-label">Approximate percentage:</label>
+        <input type="range" class="form-range" min="0" max="100" name="oil_dry_percent">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">2. How many times do you wash your face daily?</label>
+      <input type="number" class="form-control" name="wash_count" min="0" max="10" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">3. Products Used:</label><br>
+
+      <label class="form-label mt-2">Soap or Facewash:</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="cleanser_type" value="Soap" onclick="toggleInput('cleanser_brand', true)" required>
+        <label class="form-check-label">Soap</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="cleanser_type" value="Facewash" onclick="toggleInput('cleanser_brand', true)">
+        <label class="form-check-label">Facewash</label>
+      </div>
+      <div id="cleanser_brand_wrapper" class="mt-2">
+        <input type="text" id="cleanser_brand" name="cleanser_brand" class="form-control" placeholder="Brand Name" style="display:none;">
+      </div>
+
+      <label class="form-label mt-3">Moisturizer:</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="moisturizer_used" value="Yes" onclick="toggleInput('moisturizer_brand', true)" required>
+        <label class="form-check-label">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="moisturizer_used" value="No" onclick="toggleInput('moisturizer_brand', false)">
+        <label class="form-check-label">No</label>
+      </div>
+      <div id="moisturizer_brand_wrapper" class="mt-2">
+        <input type="text" id="moisturizer_brand" name="moisturizer_brand" class="form-control" placeholder="Brand Name" style="display:none;">
+      </div>
+
+      <label class="form-label mt-3">Sunscreen:</label><br>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="sunscreen_used" value="Yes" onclick="toggleInput('sunscreen_brand', true)" required>
+        <label class="form-check-label">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="sunscreen_used" value="No" onclick="toggleInput('sunscreen_brand', false)">
+        <label class="form-check-label">No</label>
+      </div>
+      <div id="sunscreen_brand_wrapper" class="mt-2">
+        <input type="text" id="sunscreen_brand" name="sunscreen_brand" class="form-control" placeholder="Brand Name" style="display:none;">
+      </div>
+
+      <label class="form-label mt-3">Other Serums:</label>
+      <input type="text" class="form-control" name="serum" placeholder="Optional">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">4. Pollution Index (0–100):</label>
+      <input type="range" class="form-range" min="0" max="100" name="pollution_index" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">5. Sleep Schedule:</label>
+      <div class="row">
+        <div class="col">
+          <input type="time" class="form-control" name="sleep_time" required>
+        </div>
+        <div class="col">
+          <input type="time" class="form-control" name="wake_time" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">6. Food Habits (foods you consume a lot):</label>
+      <textarea class="form-control" name="food_habits" rows="3" required></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Any other info (optional):</label>
+      <textarea class="form-control" name="additional_info" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Get My Skin Care Suggestions</button>
+  </form>
+
+  <script>
+    function showPercentage() {
+      document.getElementById('percentageBox').style.display = 'block';
+    }
+    function hidePercentage() {
+      document.getElementById('percentageBox').style.display = 'none';
+    }
+    function toggleInput(id, show) {
+      const input = document.getElementById(id);
+      const wrapper = document.getElementById(`${id}_wrapper`);
+      if (input) input.style.display = show ? 'block' : 'none';
+      if (wrapper) wrapper.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
