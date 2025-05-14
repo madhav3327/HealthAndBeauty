@@ -1,0 +1,1 @@
+web: gunicorn beautycare_ai.wsgi
